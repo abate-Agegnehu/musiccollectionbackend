@@ -4,7 +4,7 @@ const upload = require("../utils/multer");
 const Music = require("../model/Music");
 const mongoose = require("mongoose");
 
-router.post("/", upload.single("video"), async (req, res) => {
+router.post("/", upload.single("media"), async (req, res) => {
   try {
    
     if (!req.file) {
@@ -12,7 +12,7 @@ router.post("/", upload.single("video"), async (req, res) => {
     }
 
     const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "video",
+      resource_type: "media",
     });
 
     let music = new Music({
@@ -34,7 +34,7 @@ router.post("/", upload.single("video"), async (req, res) => {
   }
 });
 
-router.put("/:id", upload.single("video"), async (req, res) => {
+router.put("/:id", upload.single("media"), async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid music ID format" });
@@ -47,13 +47,13 @@ router.put("/:id", upload.single("video"), async (req, res) => {
     }
 
     await cloudinary.uploader.destroy(music.cloudinary_id, {
-      resource_type: "video",
+      resource_type: "media",
     });
 
     let result;
     if (req.file) {
       result = await cloudinary.uploader.upload(req.file.path, {
-        resource_type: "video",
+        resource_type: "media",
       });
     }
 
@@ -70,7 +70,9 @@ router.put("/:id", upload.single("video"), async (req, res) => {
   } catch (err) {
     console.error(err);
     if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
-      return res.status(413).json({ message: "File size is too large. Max size is 50MB." });
+      return res
+        .status(413)
+        .json({ message: "File size is too large. Max size is 50MB." });
     }
     res.status(500).json({ message: "Server error" });
   }

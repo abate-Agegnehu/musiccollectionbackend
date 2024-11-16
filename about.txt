@@ -1,3 +1,0 @@
-https://backendmusicplayer-production.up.railway.app/music
-
-https://railway.app/project/2c88fff3-9965-490b-b9d5-f60ae3afbe21/service/bc37f256-972f-48ad-af10-f19fbab5208f/settings

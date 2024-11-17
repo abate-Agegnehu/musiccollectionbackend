@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken"); 
+const jwt = require("jsonwebtoken");
 const User = require("../model/User");
 
 router.post("/register", async (req, res) => {
@@ -10,7 +10,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10); 
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     const user = new User({
@@ -20,12 +20,10 @@ router.post("/register", async (req, res) => {
     });
 
     await user.save();
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully",
-        user: { username: user.username, email: user.email },
-      });
+    res.status(201).json({
+      message: "User registered successfully",
+      user: { username: user.username, email: user.email },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -53,20 +51,9 @@ router.post("/login", async (req, res) => {
     res.status(200).json({
       isAuthenticated: true,
       message: "Login successful",
-      token, 
+      token,
       user: { username: user.username, email: user.email },
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
